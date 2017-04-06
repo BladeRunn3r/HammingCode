@@ -16,7 +16,7 @@ public class MainApp extends Application implements Controller {
 	}
 	
 	private void initClientLayout() {
-		loadScene(primaryStage, "Hamming.fxml", 569, 543, false, 0, 0);
+		loadScene(primaryStage, "Hamming.fxml", 572, 592, false, 0, 0);
 	}
 
 	public static void main(String[] args) {

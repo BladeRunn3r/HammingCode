@@ -12,63 +12,69 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="543.0" prefWidth="569.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Hamming">
+<AnchorPane prefHeight="592.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Hamming">
    <children>
-      <Label layoutX="23.0" layoutY="142.0" prefHeight="20.0" prefWidth="143.0" text="Podaj bity wejściowe:">
+      <Label layoutX="25.0" layoutY="201.0" prefHeight="20.0" prefWidth="143.0" text="Podaj bity wejściowe:">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <TextField fx:id="entryBits" layoutX="231.0" layoutY="140.0" />
-      <Label layoutX="23.0" layoutY="266.0" prefHeight="20.0" prefWidth="216.0" text="Wygenerowany kod Hamminga:">
+      <TextField fx:id="entryBits" layoutX="204.0" layoutY="199.0" />
+      <Label layoutX="21.0" layoutY="328.0" prefHeight="20.0" prefWidth="216.0" text="Wygenerowany kod Hamminga:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="generatedCode" layoutX="270.0" layoutY="254.0" prefHeight="43.0" prefWidth="250.0">
+      <Label fx:id="generatedCode" layoutX="251.0" layoutY="317.0" prefHeight="43.0" prefWidth="250.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="23.0" layoutY="386.0" prefHeight="25.0" prefWidth="312.0" text="Podaj lokalizację błedu (bitami od prawej strony):">
+      <Label layoutX="23.0" layoutY="454.0" prefHeight="25.0" prefWidth="312.0" text="Podaj lokalizację błedu (bitami od prawej strony):">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="errorBitPosition" layoutX="351.0" layoutY="386.0" prefHeight="25.0" prefWidth="38.0" />
-      <Label layoutX="57.0" layoutY="485.0" prefHeight="20.0" prefWidth="113.0" text="Poprawiony kod:">
+      <TextField fx:id="errorBitPosition" layoutX="345.0" layoutY="454.0" prefHeight="25.0" prefWidth="38.0" />
+      <Label layoutX="57.0" layoutY="546.0" prefHeight="20.0" prefWidth="113.0" text="Poprawiony kod:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="correctedCode" layoutX="239.0" layoutY="477.0" prefHeight="36.0" prefWidth="273.0">
+      <Label fx:id="correctedCode" layoutX="239.0" layoutY="538.0" prefHeight="36.0" prefWidth="273.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="generateCodeButton" layoutX="423.0" layoutY="140.0" mnemonicParsing="false" onAction="#doHamming" text="Generuj" />
-      <Button fx:id="correctCodeButton" disable="true" layoutX="416.0" layoutY="386.0" mnemonicParsing="false" onAction="#fixError" prefHeight="25.0" prefWidth="100.0" text="Napraw błąd" />
-      <Label layoutX="23.0" layoutY="439.0" prefHeight="20.0" prefWidth="181.0" text="Kod po wstrzyknięciu błędu:">
+      <Button fx:id="generateCodeButton" layoutX="369.0" layoutY="199.0" mnemonicParsing="false" onAction="#doHamming" prefHeight="25.0" prefWidth="81.0" text="Generuj" />
+      <Button fx:id="correctCodeButton" disable="true" layoutX="402.0" layoutY="454.0" mnemonicParsing="false" onAction="#fixError" prefHeight="25.0" prefWidth="100.0" text="Napraw błąd" />
+      <Label layoutX="23.0" layoutY="502.0" prefHeight="20.0" prefWidth="181.0" text="Kod po wstrzyknięciu błędu:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="errorCode" layoutX="239.0" layoutY="431.0" prefHeight="36.0" prefWidth="273.0">
+      <Label fx:id="errorCode" layoutX="239.0" layoutY="494.0" prefHeight="36.0" prefWidth="273.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="entryMessageLabel" layoutX="50.0" layoutY="190.0" prefHeight="58.0" prefWidth="440.0" wrapText="true">
+      <Label fx:id="entryMessageLabel" layoutX="66.0" layoutY="246.0" prefHeight="58.0" prefWidth="440.0" wrapText="true">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label fx:id="errorMessageLabel" layoutX="53.0" layoutY="302.0" prefHeight="58.0" prefWidth="440.0" wrapText="true">
+      <Label fx:id="errorMessageLabel" layoutX="66.0" layoutY="368.0" prefHeight="58.0" prefWidth="440.0" wrapText="true">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button layoutX="23.0" layoutY="47.0" mnemonicParsing="false" onAction="#fileChooserButton" prefHeight="58.0" prefWidth="207.0" text="Wprowadź dane z pliku tekstowego" />
-      <Button fx:id="pdfOutputButton" disable="true" layoutX="388.0" layoutY="47.0" mnemonicParsing="false" onAction="#createPDF" prefHeight="58.0" prefWidth="157.0" text="Wygeneruj raport do PDF" />
-      <Button layoutX="249.0" layoutY="47.0" mnemonicParsing="false" onAction="#randomValuesButton" prefHeight="58.0" prefWidth="113.0" text="Wygeneruj dla&#10;losowych wartości" textAlignment="CENTER" />
+      <Button layoutX="25.0" layoutY="31.0" mnemonicParsing="false" onAction="#fileChooserButton" prefHeight="58.0" prefWidth="207.0" text="Wprowadź dane z pliku tekstowego" />
+      <Button fx:id="pdfOutputButton" disable="true" layoutX="388.0" layoutY="31.0" mnemonicParsing="false" onAction="#createPDF" prefHeight="58.0" prefWidth="157.0" text="Wygeneruj raport do PDF" />
+      <Button layoutX="251.0" layoutY="31.0" mnemonicParsing="false" onAction="#randomValuesButton" prefHeight="58.0" prefWidth="113.0" text="Wygeneruj dla&#10;losowych wartości" textAlignment="CENTER" />
+      <Label layoutX="20.0" layoutY="120.0" prefHeight="58.0" prefWidth="173.0" text="Podaj bity wejściowe do przeprowadzenia operacji na bramkach logicznych:" wrapText="true" />
+      <TextField fx:id="gatesEntryBits" layoutX="204.0" layoutY="137.0" />
+      <Button layoutX="367.0" layoutY="137.0" mnemonicParsing="false" onAction="#doAndGate" text="AND" />
+      <Button layoutX="431.0" layoutY="137.0" mnemonicParsing="false" onAction="#doOrGate" prefHeight="25.0" prefWidth="42.0" text="OR" />
+      <Button layoutX="495.0" layoutY="137.0" mnemonicParsing="false" onAction="#doXorGate" prefHeight="25.0" prefWidth="50.0" text="XOR" />
+      <CheckBox fx:id="randomErrorBitBox" layoutX="462.0" layoutY="183.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="100.0" text="Automatycznie losuj bit błędu" wrapText="true" />
    </children>
 </AnchorPane>
