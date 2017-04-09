@@ -197,6 +197,7 @@ public class Hamming {
 		fileChooser.setTitle("Open .txt File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"));
 		File file = fileChooser.showOpenDialog(MainApp.primaryStage);
+		
 		if (file != null) {
 			usingFileChooser = true;
 			Scanner scanner;
@@ -206,8 +207,7 @@ public class Hamming {
 				errorCode.setText("");
 				correctedCode.setText("");
 				errorMessageLabel.setText("");
-				entryBits.setText(scanner.nextLine());
-				System.out.println(usingFileChooser);
+				entryBits.setText(scanner.nextLine().replaceAll("\\s",""));
 				doHamming();
 				Platform.runLater(new Runnable() {
 					@Override public void run() {
@@ -232,25 +232,31 @@ public class Hamming {
 	
 	@FXML public void createPDF() {
         Document document = new Document();
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("pdf Files", "*.pdf"));
+        fileChooser.setTitle("Save pdf file");
+        fileChooser.setInitialFileName("output.pdf");
+        File savedFile = fileChooser.showSaveDialog(MainApp.primaryStage);
         
-        try {
-			PdfWriter.getInstance(document, new FileOutputStream("output.pdf"));
-		} catch (DocumentException | IOException e) {
-			e.printStackTrace();
-		}
-        document.open();
-        
-        try {
-            BaseFont baseFont = BaseFont.createFont("fonts/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            Font newFont = new Font(baseFont, 12);
-			document.add(new Paragraph("Wygenerowany kod: " + generatedCode.getText()));
-			document.add(new Paragraph("Bit błędu: " + errorBitPosition.getText(), newFont));
-			document.add(new Paragraph("Kod z błędem: " + errorCode.getText(), newFont));
-			document.add(new Paragraph("Poprawiony kod: " + correctedCode.getText()));
-		} catch (DocumentException | IOException e) {
-			e.printStackTrace();
-		}
-        document.close();
+        if (savedFile != null) {
+	        try {
+				PdfWriter.getInstance(document, new FileOutputStream(savedFile));
+			} catch (DocumentException | IOException e) {
+				e.printStackTrace();
+			}
+	        document.open();
+	        
+	        try {
+	            BaseFont baseFont = BaseFont.createFont("fonts/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	            Font newFont = new Font(baseFont, 12);
+				document.add(new Paragraph("Wygenerowany kod: " + generatedCode.getText()));
+				document.add(new Paragraph("Bit błędu: " + errorBitPosition.getText(), newFont));
+				document.add(new Paragraph("Kod z błędem: " + errorCode.getText(), newFont));
+				document.add(new Paragraph("Poprawiony kod: " + correctedCode.getText()));
+			} catch (DocumentException | IOException e) {
+				e.printStackTrace();
+			}
+	        document.close();
+        }
 	}
 	
 	@FXML public void doAndGate() {
