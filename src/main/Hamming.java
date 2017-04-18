@@ -34,19 +34,15 @@ public class Hamming {
 	@FXML private Label errorCode;
 	@FXML private Label entryMessageLabel;
 	@FXML private Label errorMessageLabel;
-	@FXML private Button generateCodeButton;
 	@FXML private Button correctCodeButton;
 	@FXML private Button pdfOutputButton;
-	@FXML private Button andGate;
-	@FXML private Button orGate;
-	@FXML private Button xorGate;
 	@FXML private CheckBox randomErrorBitBox;
 	
-	int a[], b[];
-	FileChooser fileChooser = new FileChooser();
-	Random generator = new Random();
-	String input, randomBits;
-	 private static boolean usingFileChooser = false;
+	private int a[], b[];
+	//private FileChooser fileChooser = new FileChooser();
+	private Random generator = new Random();
+	private String input, randomBits;
+	private static boolean usingFileChooser = false;
 		
 	private void initializeHamming() {
 
@@ -70,31 +66,27 @@ public class Hamming {
 	}
 	
 	private void resetGUI() {
-		Platform.runLater(new Runnable() {
-			@Override public void run() {
-				entryMessageLabel.setTextAlignment(TextAlignment.CENTER);
-				entryMessageLabel.setText("nie wprowadzono danych lub wprowadzono wartości różne od bitów");
-				entryMessageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 14pt;");
-				errorCode.setText("");
-				correctedCode.setText("");
-				generatedCode.setText("");
-				errorBitPosition.setText("");
-				errorMessageLabel.setText("");
-				pdfOutputButton.setDisable(true);
-				correctCodeButton.setDisable(true);
-			}
-		});
+		Platform.runLater(() -> {
+            entryMessageLabel.setTextAlignment(TextAlignment.CENTER);
+            entryMessageLabel.setText("nie wprowadzono danych lub wprowadzono wartości różne od bitów");
+            entryMessageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 14pt;");
+            errorCode.setText("");
+            correctedCode.setText("");
+            generatedCode.setText("");
+            errorBitPosition.setText("");
+            errorMessageLabel.setText("");
+            pdfOutputButton.setDisable(true);
+            correctCodeButton.setDisable(true);
+        });
 	}
 	
 	private void handleRandomingCheckBox() {
 		if (randomErrorBitBox.isSelected()) {
-			Platform.runLater(new Runnable() {
-				@Override public void run() {
-					String randomErrorBit = Integer.toString(generator.nextInt(entryBits.getText().length()) + 1);
-					errorBitPosition.setText(randomErrorBit);
-					fixError();
-				}				
-			});
+			Platform.runLater(() -> {
+                String randomErrorBit = Integer.toString(generator.nextInt(entryBits.getText().length()) + 1);
+                errorBitPosition.setText(randomErrorBit);
+                fixError();
+            });
 		}
 		else { 
 			errorBitPosition.setText("");
@@ -103,37 +95,34 @@ public class Hamming {
 	}
 	
 	@FXML public void doHamming() {
-			
-		if (entryBits.getText().matches("[0-1]+") && entryBits.getText() != "") {
-			Platform.runLater(new Runnable() {
-				@Override public void run() {	
-					String generated = "";
-					initializeHamming();
-		    
-					System.out.println("You entered:");
-					for (int i = 0 ; i < entryBits.getText().length() ; i++) {
-					System.out.print(a[entryBits.getText().length() - i - 1]);
-					}
-					System.out.println();
-								
-					System.out.println("Generated code is:");
-					for (int i = 0 ; i < b.length ; i++) {
-						System.out.print(b[b.length-i-1]);
-						generated = generated + Integer.toString(b[b.length-i-1]);				
-					}
-					
-					entryMessageLabel.setText("");
-					errorMessageLabel.setText("");
-					errorCode.setText("");
-					correctedCode.setText("");
-					generatedCode.setText(generated);
-					correctCodeButton.setDisable(false);
-					System.out.println();
-					System.out.println(usingFileChooser);
-					if (usingFileChooser == false) handleRandomingCheckBox();
-				}
 
-			});
+		if (entryBits.getText().matches("[0-1]+") && !entryBits.getText().equals("")) {
+			Platform.runLater(() -> {
+                StringBuilder generated = new StringBuilder();
+                initializeHamming();
+
+                System.out.println("You entered:");
+                for (int i = 0 ; i < entryBits.getText().length() ; i++) {
+                System.out.print(a[entryBits.getText().length() - i - 1]);
+                }
+                System.out.println();
+
+                System.out.println("Generated code is:");
+                for (int i = 0 ; i < b.length ; i++) {
+                    System.out.print(b[b.length-i-1]);
+                    generated.append(Integer.toString(b[b.length - i - 1]));
+                }
+
+                entryMessageLabel.setText("");
+                errorMessageLabel.setText("");
+                errorCode.setText("");
+                correctedCode.setText("");
+                generatedCode.setText(generated.toString());
+                correctCodeButton.setDisable(false);
+                System.out.println();
+                System.out.println(usingFileChooser);
+                if (!usingFileChooser) handleRandomingCheckBox();
+            });
 		}
 		else resetGUI();
 	}
@@ -141,59 +130,58 @@ public class Hamming {
 	@FXML public void fixError() {
 			// Difference in the sizes of original and new array gives the number of parity bits added.
 
-		Platform.runLater(new Runnable() {
-			@Override public void run() {	
-				
-				if (errorBitPosition.getText().matches("[0-9]+") && (errorBitPosition.getText() != "")) {
-					
-					int errorBit = Integer.parseInt(errorBitPosition.getText());
-						
-					if ((errorBit != 0) && (Integer.parseInt(errorBitPosition.getText()) <= generatedCode.getText().length())) {
-							
-						pdfOutputButton.setDisable(false);
-						System.out.println("Enter position of a bit to alter to check for error detection at the receiver end (0 for no error):");
-						String error = "";
-					
-						initializeHamming();
-					
-						b[errorBit - 1] = (b[errorBit - 1] + 1)%2;
-	
-						System.out.println("Sent code is:");
-						
-						for(int i = 0 ; i < b.length ; i++) {
-							System.out.print(b[b.length-i-1]);
-							error = error + Integer.toString(b[b.length-i-1]);
-						}
-						
-						errorCode.setText(error);
-						System.out.println();
-						String corrected = Utils.receive(b, b.length - a.length);
-						correctedCode.setText(corrected);
-						errorMessageLabel.setText("");
-						usingFileChooser = false;
-					}
-								
-					else {
-						errorMessageLabel.setText("wprowadzono niepoprawną lokalizację");
-						errorMessageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 16pt;");
-						errorCode.setText("");
-						correctedCode.setText("");
-						pdfOutputButton.setDisable(true);
-					}
-				}
-				else {
-					errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
-					errorMessageLabel.setText("nie wprowadzono danych lub wprowadzono wartości różne od liczb");
-					errorMessageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 14pt;");
-					errorCode.setText("");
-					correctedCode.setText("");
-					pdfOutputButton.setDisable(true);
-				}
-			}
-		});
+		Platform.runLater(() -> {
+
+            if (errorBitPosition.getText().matches("[0-9]+") && (!errorBitPosition.getText().equals(""))) {
+
+                int errorBit = Integer.parseInt(errorBitPosition.getText());
+
+                if ((errorBit != 0) && (Integer.parseInt(errorBitPosition.getText()) <= generatedCode.getText().length())) {
+
+                    pdfOutputButton.setDisable(false);
+                    System.out.println("Enter position of a bit to alter to check for error detection at the receiver end (0 for no error):");
+                    StringBuilder error = new StringBuilder();
+
+                    initializeHamming();
+
+                    b[errorBit - 1] = (b[errorBit - 1] + 1)%2;
+
+                    System.out.println("Sent code is:");
+
+                    for(int i = 0 ; i < b.length ; i++) {
+                        System.out.print(b[b.length-i-1]);
+                        error.append(Integer.toString(b[b.length - i - 1]));
+                    }
+
+                    errorCode.setText(error.toString());
+                    System.out.println();
+                    String corrected = Utils.receive(b, b.length - a.length);
+                    correctedCode.setText(corrected);
+                    errorMessageLabel.setText("");
+                    usingFileChooser = false;
+                }
+
+                else {
+                    errorMessageLabel.setText("wprowadzono niepoprawną lokalizację");
+                    errorMessageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 16pt;");
+                    errorCode.setText("");
+                    correctedCode.setText("");
+                    pdfOutputButton.setDisable(true);
+                }
+            }
+            else {
+                errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
+                errorMessageLabel.setText("nie wprowadzono danych lub wprowadzono wartości różne od liczb");
+                errorMessageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 14pt;");
+                errorCode.setText("");
+                correctedCode.setText("");
+                pdfOutputButton.setDisable(true);
+            }
+        });
 	}
 	
 	@FXML public void fileChooserButton() {
+		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open .txt File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"));
 		File file = fileChooser.showOpenDialog(MainApp.primaryStage);
@@ -209,13 +197,11 @@ public class Hamming {
 				errorMessageLabel.setText("");
 				entryBits.setText(scanner.nextLine().replaceAll("\\s",""));
 				doHamming();
-				Platform.runLater(new Runnable() {
-					@Override public void run() {
-						errorBitPosition.setText(scanner.nextLine());
-						System.out.println(errorBitPosition.getText());
-						scanner.close();
-					}
-				});
+				Platform.runLater(() -> {
+                    errorBitPosition.setText(scanner.nextLine());
+                    System.out.println(errorBitPosition.getText());
+                    scanner.close();
+                });
 				fixError();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -232,6 +218,7 @@ public class Hamming {
 	
 	@FXML public void createPDF() {
         Document document = new Document();
+		FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("pdf Files", "*.pdf"));
         fileChooser.setTitle("Save pdf file");
         fileChooser.setInitialFileName("output.pdf");
@@ -260,46 +247,40 @@ public class Hamming {
 	}
 	
 	@FXML public void doAndGate() {
-		if (gatesEntryBits.getText().matches("[0-1]+") && gatesEntryBits.getText() != "") {
-			Platform.runLater(new Runnable() {
-				@Override public void run() {
-					initializeGates();
-					int result = (Integer.parseInt(input, 2)) & (Integer.parseInt(randomBits, 2));
-					entryBits.setText(Integer.toBinaryString(result));
-					doHamming();
-					handleRandomingCheckBox();
-				}
-			});
+		if (gatesEntryBits.getText().matches("[0-1]+") && !gatesEntryBits.getText().equals("")) {
+			Platform.runLater(() -> {
+                initializeGates();
+                int result = (Integer.parseInt(input, 2)) & (Integer.parseInt(randomBits, 2));
+                entryBits.setText(Integer.toBinaryString(result));
+                doHamming();
+                handleRandomingCheckBox();
+            });
 		}
 		else resetGUI();
 	}
 			
 	@FXML public void doOrGate() {
-		if (gatesEntryBits.getText().matches("[0-1]+") && gatesEntryBits.getText() != "") {
-			Platform.runLater(new Runnable() {
-				@Override public void run() {
-					initializeGates();
-					int result = (Integer.parseInt(input, 2)) | (Integer.parseInt(randomBits, 2));
-					entryBits.setText(Integer.toBinaryString(result));
-					doHamming();
-					handleRandomingCheckBox();
-				}
-			});
+		if (gatesEntryBits.getText().matches("[0-1]+") && !gatesEntryBits.getText().equals("")) {
+			Platform.runLater(() -> {
+                initializeGates();
+                int result = (Integer.parseInt(input, 2)) | (Integer.parseInt(randomBits, 2));
+                entryBits.setText(Integer.toBinaryString(result));
+                doHamming();
+                handleRandomingCheckBox();
+            });
 		}
 		else resetGUI();
 	}
 	
 	@FXML public void doXorGate() {
-		if (gatesEntryBits.getText().matches("[0-1]+") && gatesEntryBits.getText() != "") {
-			Platform.runLater(new Runnable() {
-				@Override public void run() {
-					initializeGates();
-					int result = (Integer.parseInt(input, 2)) ^ (Integer.parseInt(randomBits, 2));
-					entryBits.setText(Integer.toBinaryString(result));
-					doHamming();
-					handleRandomingCheckBox();
-				}
-			});
+		if (gatesEntryBits.getText().matches("[0-1]+") && !gatesEntryBits.getText().equals("")) {
+			Platform.runLater(() -> {
+                initializeGates();
+                int result = (Integer.parseInt(input, 2)) ^ (Integer.parseInt(randomBits, 2));
+                entryBits.setText(Integer.toBinaryString(result));
+                doHamming();
+                handleRandomingCheckBox();
+            });
 		}
 		else resetGUI();	
 	}

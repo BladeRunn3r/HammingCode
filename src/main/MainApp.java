@@ -1,11 +1,10 @@
 package main;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import main.Controller;
 
 public class MainApp extends Application implements Controller {
 	
-	public static Stage primaryStage;
+	static Stage primaryStage;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -16,7 +15,7 @@ public class MainApp extends Application implements Controller {
 	}
 	
 	private void initClientLayout() {
-		loadScene(primaryStage, "Hamming.fxml", 572, 592, false, 0, 0);
+		loadScene(primaryStage, 572, 592, false, 0, 0);
 	}
 
 	public static void main(String[] args) {

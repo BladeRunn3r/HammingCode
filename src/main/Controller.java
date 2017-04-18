@@ -8,11 +8,11 @@ import javafx.stage.Stage;
 
 public interface Controller {
 	
-	default public void loadScene(Stage stage, String path, int w, int h, boolean resizable, int minW, int minH) {
+	default void loadScene(Stage stage, int w, int h, boolean resizable, int minW, int minH) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource(path));
-			Parent layout = (Parent) loader.load();
+			loader.setLocation(MainApp.class.getResource("Hamming.fxml"));
+			Parent layout = loader.load();
 			stage.hide();
 			stage.setMaximized(false);
 			stage.setWidth(w);

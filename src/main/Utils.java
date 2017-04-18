@@ -1,8 +1,8 @@
 package main;
 
-public class Utils {
+class Utils {
 					
-	public static int[] generateCode(int a[]) {
+	static int[] generateCode(int a[]) {
 		
 		int b[];
 		//find number of parity bits required:
@@ -40,7 +40,7 @@ public class Utils {
 		return b;
 	}
 	
-	public static int getParity(int b[], int power) {
+	private static int getParity(int b[], int power) {
 		int parity = 0;
 		for(int i = 0; i < b.length; i++) {
 			if(b[i] != 2) {
@@ -63,16 +63,16 @@ public class Utils {
 		return parity;
 	}
 	
-	public static String receive(int a[], int parity_count) {
+	static String receive(int a[], int parity_count) {
 		//detect the error and correct it, if any.
 		int power;
-		String x = "";
+		StringBuilder x = new StringBuilder();
 		// use the value stored in 'power' to find the correct bits to check for parity
 		
 		int parity[] = new int[parity_count];
 		// store the values of the parity checks
 		
-		String syndrome = new String();
+		StringBuilder syndrome = new StringBuilder();
 		// used to store the integer value of error location
 		
 		for(power = 0; power < parity_count; power++) {
@@ -90,19 +90,19 @@ public class Utils {
 					}
 				}
 			}
-			syndrome = parity[power] + syndrome;
+			syndrome.insert(0, parity[power]);
 		}
 		//parity check equation values
 		// Using these values check if there is a single bit error and correct
 		
-		int error_location = Integer.parseInt(syndrome, 2);
+		int error_location = Integer.parseInt(syndrome.toString(), 2);
 
 			System.out.println("Error is at location " + error_location + ".");
 			a[error_location - 1] = (a[error_location - 1] + 1)%2;
 			System.out.println("Corrected code is:");
 			for(int i = 0; i < a.length; i++) {
 				System.out.print(a[a.length - i - 1]);
-				x = x + Integer.toString(a[a.length - i - 1]);
+				x.append(Integer.toString(a[a.length - i - 1]));
 			}
 			System.out.println();
 					
@@ -116,6 +116,6 @@ public class Utils {
 			else power--;
 		}
 		System.out.println();
-		return x;
+		return x.toString();
 	}	
 }
