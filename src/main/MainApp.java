@@ -15,7 +15,7 @@ public class MainApp extends Application implements Controller {
 	}
 	
 	private void initClientLayout() {
-		loadScene(primaryStage, 572, 592, false, 0, 0);
+		loadScene(primaryStage, 572, 667, false, 0, 0);
 	}
 
 	public static void main(String[] args) {

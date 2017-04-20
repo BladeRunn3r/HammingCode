@@ -16,10 +16,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -35,13 +32,14 @@ public class Hamming {
 	@FXML private Label entryMessageLabel;
 	@FXML private Label errorMessageLabel;
 	@FXML private Button correctCodeButton;
-	@FXML private Button pdfOutputButton;
+    @FXML private Button andButton;
+    @FXML private Button orButton;
+    @FXML private Button xorButton;
+	@FXML private MenuItem pdfOutputOption;
 	@FXML private CheckBox randomErrorBitBox;
 	
 	private int a[], b[];
-	//private FileChooser fileChooser = new FileChooser();
 	private Random generator = new Random();
-	private String input, randomBits;
 	private static boolean usingFileChooser = false;
 		
 	private void initializeHamming() {
@@ -53,18 +51,7 @@ public class Hamming {
 	    }		
 		b = Utils.generateCode(a);
 	}
-	
-	private void initializeGates() {
-				input = gatesEntryBits.getText();
-				StringBuilder generated = new StringBuilder(30);
-				
-				for (int i = 0; i < gatesEntryBits.getText().length(); i++) {
-					int bit = (generator.nextBoolean()) ? 1 : 0;
-					generated.append(bit);
-				}			
-				randomBits = generated.toString();
-	}
-	
+
 	private void resetGUI() {
 		Platform.runLater(() -> {
             entryMessageLabel.setTextAlignment(TextAlignment.CENTER);
@@ -75,7 +62,7 @@ public class Hamming {
             generatedCode.setText("");
             errorBitPosition.setText("");
             errorMessageLabel.setText("");
-            pdfOutputButton.setDisable(true);
+            pdfOutputOption.setDisable(true);
             correctCodeButton.setDisable(true);
         });
 	}
@@ -90,7 +77,7 @@ public class Hamming {
 		}
 		else { 
 			errorBitPosition.setText("");
-			pdfOutputButton.setDisable(true);
+			pdfOutputOption.setDisable(true);
 		}
 	}
 	
@@ -138,7 +125,7 @@ public class Hamming {
 
                 if ((errorBit != 0) && (Integer.parseInt(errorBitPosition.getText()) <= generatedCode.getText().length())) {
 
-                    pdfOutputButton.setDisable(false);
+                    pdfOutputOption.setDisable(false);
                     System.out.println("Enter position of a bit to alter to check for error detection at the receiver end (0 for no error):");
                     StringBuilder error = new StringBuilder();
 
@@ -166,7 +153,7 @@ public class Hamming {
                     errorMessageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 16pt;");
                     errorCode.setText("");
                     correctedCode.setText("");
-                    pdfOutputButton.setDisable(true);
+                    pdfOutputOption.setDisable(true);
                 }
             }
             else {
@@ -175,12 +162,12 @@ public class Hamming {
                 errorMessageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 14pt;");
                 errorCode.setText("");
                 correctedCode.setText("");
-                pdfOutputButton.setDisable(true);
+                pdfOutputOption.setDisable(true);
             }
         });
 	}
 	
-	@FXML public void fileChooserButton() {
+	@FXML public void handleFileChooser() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open .txt File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.txt"));
@@ -245,43 +232,32 @@ public class Hamming {
 	        document.close();
         }
 	}
-	
-	@FXML public void doAndGate() {
+
+	@FXML public void handleGates() {
 		if (gatesEntryBits.getText().matches("[0-1]+") && !gatesEntryBits.getText().equals("")) {
 			Platform.runLater(() -> {
-                initializeGates();
-                int result = (Integer.parseInt(input, 2)) & (Integer.parseInt(randomBits, 2));
-                entryBits.setText(Integer.toBinaryString(result));
-                doHamming();
-                handleRandomingCheckBox();
-            });
+                String input = gatesEntryBits.getText();
+                StringBuilder generated = new StringBuilder(30);
+
+                for (int i = 0; i < gatesEntryBits.getText().length(); i++) {
+                    int bit = (generator.nextBoolean()) ? 1 : 0;
+                    generated.append(bit);
+                }
+                String randomBits = generated.toString();
+				int result;
+				if (andButton.isPressed()) {
+                    result = (Integer.parseInt(input, 2)) & (Integer.parseInt(randomBits, 2));
+                }
+                else if (orButton.isPressed()) {
+                    result = (Integer.parseInt(input, 2)) | (Integer.parseInt(randomBits, 2));
+                }
+                else result = (Integer.parseInt(input, 2)) ^ (Integer.parseInt(randomBits, 2));
+
+				entryBits.setText(Integer.toBinaryString(result));
+				doHamming();
+				handleRandomingCheckBox();
+			});
 		}
 		else resetGUI();
-	}
-			
-	@FXML public void doOrGate() {
-		if (gatesEntryBits.getText().matches("[0-1]+") && !gatesEntryBits.getText().equals("")) {
-			Platform.runLater(() -> {
-                initializeGates();
-                int result = (Integer.parseInt(input, 2)) | (Integer.parseInt(randomBits, 2));
-                entryBits.setText(Integer.toBinaryString(result));
-                doHamming();
-                handleRandomingCheckBox();
-            });
-		}
-		else resetGUI();
-	}
-	
-	@FXML public void doXorGate() {
-		if (gatesEntryBits.getText().matches("[0-1]+") && !gatesEntryBits.getText().equals("")) {
-			Platform.runLater(() -> {
-                initializeGates();
-                int result = (Integer.parseInt(input, 2)) ^ (Integer.parseInt(randomBits, 2));
-                entryBits.setText(Integer.toBinaryString(result));
-                doHamming();
-                handleRandomingCheckBox();
-            });
-		}
-		else resetGUI();	
 	}
 }
