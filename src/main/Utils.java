@@ -94,28 +94,13 @@ class Utils {
 		}
 		//parity check equation values
 		// Using these values check if there is a single bit error and correct
-		
 		int error_location = Integer.parseInt(syndrome.toString(), 2);
 
-			System.out.println("Error is at location " + error_location + ".");
 			a[error_location - 1] = (a[error_location - 1] + 1)%2;
-			System.out.println("Corrected code is:");
 			for(int i = 0; i < a.length; i++) {
-				System.out.print(a[a.length - i - 1]);
 				x.append(Integer.toString(a[a.length - i - 1]));
 			}
-			System.out.println();
-					
-		// extract the original data from the received (and corrected) code:
-		System.out.println("Original data sent was:");
-		power = parity_count - 1;
-		for(int i = a.length; i > 0; i--) {
-			if(Math.pow(2, power) != i) {
-				System.out.print(a[i - 1]);
-			}
-			else power--;
-		}
-		System.out.println();
+
 		return x.toString();
 	}	
 }

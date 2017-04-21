@@ -34,7 +34,7 @@ public class Hamming {
 	@FXML private Button correctCodeButton;
     @FXML private Button andButton;
     @FXML private Button orButton;
-    @FXML private Button xorButton;
+    //@FXML private Button xorButton;
 	@FXML private MenuItem pdfOutputOption;
 	@FXML private CheckBox randomErrorBitBox;
 	
@@ -88,15 +88,7 @@ public class Hamming {
                 StringBuilder generated = new StringBuilder();
                 initializeHamming();
 
-                System.out.println("You entered:");
-                for (int i = 0 ; i < entryBits.getText().length() ; i++) {
-                System.out.print(a[entryBits.getText().length() - i - 1]);
-                }
-                System.out.println();
-
-                System.out.println("Generated code is:");
                 for (int i = 0 ; i < b.length ; i++) {
-                    System.out.print(b[b.length-i-1]);
                     generated.append(Integer.toString(b[b.length - i - 1]));
                 }
 
@@ -106,8 +98,6 @@ public class Hamming {
                 correctedCode.setText("");
                 generatedCode.setText(generated.toString());
                 correctCodeButton.setDisable(false);
-                System.out.println();
-                System.out.println(usingFileChooser);
                 if (!usingFileChooser) handleRandomingCheckBox();
             });
 		}
@@ -126,29 +116,20 @@ public class Hamming {
                 if ((errorBit != 0) && (Integer.parseInt(errorBitPosition.getText()) <= generatedCode.getText().length())) {
 
                     pdfOutputOption.setDisable(false);
-                    System.out.println("Enter position of a bit to alter to check for error detection at the receiver end (0 for no error):");
                     StringBuilder error = new StringBuilder();
-
-                    initializeHamming();
-
-                    b[errorBit - 1] = (b[errorBit - 1] + 1)%2;
-
-                    System.out.println("Sent code is:");
+					initializeHamming();
+					b[errorBit - 1] = (b[errorBit - 1] + 1)%2;
 
                     for(int i = 0 ; i < b.length ; i++) {
-                        System.out.print(b[b.length-i-1]);
                         error.append(Integer.toString(b[b.length - i - 1]));
                     }
-
                     errorCode.setText(error.toString());
-                    System.out.println();
                     String corrected = Utils.receive(b, b.length - a.length);
                     correctedCode.setText(corrected);
                     errorMessageLabel.setText("");
                     usingFileChooser = false;
                 }
-
-                else {
+				else {
                     errorMessageLabel.setText("wprowadzono niepoprawną lokalizację");
                     errorMessageLabel.setStyle("-fx-text-fill: red; -fx-font-size: 16pt;");
                     errorCode.setText("");
@@ -245,6 +226,7 @@ public class Hamming {
                 }
                 String randomBits = generated.toString();
 				int result;
+
 				if (andButton.isPressed()) {
                     result = (Integer.parseInt(input, 2)) & (Integer.parseInt(randomBits, 2));
                 }
